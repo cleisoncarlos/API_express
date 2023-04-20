@@ -32,6 +32,11 @@ let db = {
 }
 
 
+
+
+
+
+
 // ednpoints
 //ver games ------------------------
 app.get('/games', (req, res)=> {
@@ -72,6 +77,55 @@ app.post('/game', (req, res) => {
     }  
     console.log(game);
   });
+
+
+
+// deletar
+  app.delete('/game/:id', (req, res) => {
+
+    if(isNaN(req.params.id)){
+           res.sendStatus(400)
+      } else {   
+      let id = parseInt(req.params.id)
+      let index = db.games.findIndex(g => g.id == id)
+
+      if(index == -1 ){
+
+        res.sendStatus(404)
+
+      } else {
+        db.games.splice(index, 1)
+        res.sendStatus(200)
+      }    
+      }
+})
+
+//editar 
+
+app.put('/game/:id', (req, res) => {
+  if (isNaN(req.params.id)) {
+    res.sendStatus(400);
+  } else {
+    let id = parseInt(req.params.id);
+    let game = db.games.find(g => g.id === id);
+    if (game !== undefined) {
+      let { title, price, year } = req.body;
+      if (title !== undefined) {
+        game.title = title;
+      }
+      if (price !== undefined) {
+        game.price = price;
+      }
+      if (year !== undefined) {
+        game.year = year;
+      }
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404);
+    }
+  }
+});
+
   
 // fim dos endpoints-------------
 
